@@ -1,7 +1,7 @@
 //import { useState } from 'react'
 //import reactLogo from './assets/react.svg'
 //import viteLogo from '/vite.svg'
-import { SharedComponent } from '@dwitlit-db/shared';
+import { SharedComponent } from '@dwitlit-db/ui';
 import './App.css'
 
 function App() {

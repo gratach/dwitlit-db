@@ -65,7 +65,7 @@ importers:
         specifier: ^7.2.4
         version: 7.3.1(@types/node@24.10.9)
 
-  packages/shared:
+  packages/ui:
     dependencies:
       react:
         specifier: ^19.2.0
@@ -116,9 +116,9 @@ importers:
 
   packages/tauri:
     dependencies:
-      '@dwitlit-db/shared':
+      '@dwitlit-db/ui':
         specifier: workspace:*
-        version: link:../shared
+        version: link:../ui
       react:
         specifier: ^19.2.0
         version: 19.2.3
@@ -168,9 +168,9 @@ importers:
 
   packages/web:
     dependencies:
-      '@dwitlit-db/shared':
+      '@dwitlit-db/ui':
         specifier: workspace:*
-        version: link:../shared
+        version: link:../ui
       react:
         specifier: ^19.2.0
         version: 19.2.3

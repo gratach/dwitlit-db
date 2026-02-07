@@ -6,7 +6,7 @@
     "build:web": "pnpm --filter @dwitlit-db/web build",
     "dev:tauri": "pnpm --filter @dwitlit-db/tauri tauri dev",
     "build:tauri": "pnpm --filter @dwitlit-db/tauri tauri build",
-    "build:shared": "pnpm --filter @dwitlit-db/shared build",
+    "build:ui": "pnpm --filter @dwitlit-db/ui build",
     "dev:server": "pnpm --filter @dwitlit-db/server dev",
     "build:server": "pnpm --filter @dwitlit-db/server build"
   },

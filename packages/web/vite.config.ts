@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@dwitlit-db/shared": path.resolve(__dirname, "../shared/src")
+      "@dwitlit-db/ui": path.resolve(__dirname, "../ui/src")
     }
   }
 })
