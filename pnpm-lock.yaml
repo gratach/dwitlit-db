@@ -16,56 +16,13 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/server:
-    dependencies:
-      react:
-        specifier: ^19.2.0
-        version: 19.2.3
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.3(react@19.2.3)
+  packages/data:
     devDependencies:
-      '@eslint/js':
-        specifier: ^9.39.1
-        version: 9.39.2
-      '@tauri-apps/cli':
-        specifier: ^2.9.6
-        version: 2.9.6
-      '@types/node':
-        specifier: ^24.10.1
-        version: 24.10.9
-      '@types/react':
-        specifier: ^19.2.5
-        version: 19.2.9
-      '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.9)
-      '@vitejs/plugin-react':
-        specifier: ^5.1.1
-        version: 5.1.2(vite@7.3.1(@types/node@24.10.9))
-      eslint:
-        specifier: ^9.39.1
-        version: 9.39.2
-      eslint-plugin-react-hooks:
-        specifier: ^7.0.1
-        version: 7.0.1(eslint@9.39.2)
-      eslint-plugin-react-refresh:
-        specifier: ^0.4.24
-        version: 0.4.26(eslint@9.39.2)
-      globals:
-        specifier: ^16.5.0
-        version: 16.5.0
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
-      typescript-eslint:
-        specifier: ^8.46.4
-        version: 8.53.1(eslint@9.39.2)(typescript@5.9.3)
-      vite:
-        specifier: ^7.2.4
-        version: 7.3.1(@types/node@24.10.9)
 
-  packages/ui:
+  packages/server:
     dependencies:
       react:
         specifier: ^19.2.0
@@ -116,6 +73,9 @@ importers:
 
   packages/tauri:
     dependencies:
+      '@dwitlit-db/data':
+        specifier: workspace:*
+        version: link:../data
       '@dwitlit-db/ui':
         specifier: workspace:*
         version: link:../ui
@@ -166,8 +126,63 @@ importers:
         specifier: ^7.2.4
         version: 7.3.1(@types/node@24.10.9)
 
+  packages/ui:
+    dependencies:
+      '@dwitlit-db/data':
+        specifier: workspace:*
+        version: link:../data
+      react:
+        specifier: ^19.2.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.3(react@19.2.3)
+    devDependencies:
+      '@eslint/js':
+        specifier: ^9.39.1
+        version: 9.39.2
+      '@tauri-apps/cli':
+        specifier: ^2.9.6
+        version: 2.9.6
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.9
+      '@types/react':
+        specifier: ^19.2.5
+        version: 19.2.9
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.9)
+      '@vitejs/plugin-react':
+        specifier: ^5.1.1
+        version: 5.1.2(vite@7.3.1(@types/node@24.10.9))
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.2
+      eslint-plugin-react-hooks:
+        specifier: ^7.0.1
+        version: 7.0.1(eslint@9.39.2)
+      eslint-plugin-react-refresh:
+        specifier: ^0.4.24
+        version: 0.4.26(eslint@9.39.2)
+      globals:
+        specifier: ^16.5.0
+        version: 16.5.0
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: ^8.46.4
+        version: 8.53.1(eslint@9.39.2)(typescript@5.9.3)
+      vite:
+        specifier: ^7.2.4
+        version: 7.3.1(@types/node@24.10.9)
+
   packages/web:
     dependencies:
+      '@dwitlit-db/data':
+        specifier: workspace:*
+        version: link:../data
       '@dwitlit-db/ui':
         specifier: workspace:*
         version: link:../ui
