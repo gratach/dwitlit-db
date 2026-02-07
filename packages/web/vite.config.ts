@@ -10,7 +10,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@dwitlit-db/ui": path.resolve(__dirname, "../ui/src")
+      "@dwitlit-db/ui": path.resolve(__dirname, "../ui/src"),
+      "@dwitlit-db/data": path.resolve(__dirname, "../data/src")
     }
   }
 })
