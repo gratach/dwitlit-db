@@ -116,6 +116,9 @@ importers:
 
   packages/tauri:
     dependencies:
+      '@dwitlit-db/shared':
+        specifier: workspace:*
+        version: link:../shared
       react:
         specifier: ^19.2.0
         version: 19.2.3
