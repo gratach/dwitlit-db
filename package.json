@@ -1,6 +1,7 @@
 {
   "name": "dwitlit-db",
   "private": true,
+  "license": "GPL-3.0-only",
   "scripts": {
     "dev:web": "pnpm --filter @dwitlit-db/web dev",
     "build:web": "pnpm --filter @dwitlit-db/web build",
