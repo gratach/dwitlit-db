@@ -4,8 +4,8 @@
   "scripts": {
     "dev:web": "pnpm --filter @dwitlit-db/web dev",
     "build:web": "pnpm --filter @dwitlit-db/web build",
-    "dev:tauri": "pnpm --filter @dwitlit-db/tauri dev",
-    "build:tauri": "pnpm --filter @dwitlit-db/tauri build",
+    "dev:tauri": "pnpm --filter @dwitlit-db/tauri tauri dev",
+    "build:tauri": "pnpm --filter @dwitlit-db/tauri tauri build",
     "build:shared": "pnpm --filter @dwitlit-db/shared build",
     "dev:server": "pnpm --filter @dwitlit-db/server dev",
     "build:server": "pnpm --filter @dwitlit-db/server build"
