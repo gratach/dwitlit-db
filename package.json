@@ -9,9 +9,21 @@
     "build:tauri": "pnpm --filter @dwitlit-db/tauri tauri build",
     "build:ui": "pnpm --filter @dwitlit-db/ui build",
     "dev:server": "pnpm --filter @dwitlit-db/server dev",
-    "build:server": "pnpm --filter @dwitlit-db/server build"
+    "build:server": "pnpm --filter @dwitlit-db/server build",
+    "test": "jest"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.2.9",
+    "@types/react-dom": "^19.2.3",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
   },
   "dependencies": {
