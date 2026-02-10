@@ -31,3 +31,5 @@ export class Database {
     this.listeners.forEach((listener) => listener());
   }
 }
+
+export * from './dwitlit-db';
