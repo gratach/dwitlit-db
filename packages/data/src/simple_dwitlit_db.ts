@@ -1,3 +1,8 @@
+// This file is ai-generated and not checked by a human.
+
+
+import type { IDwitlitDB } from './dwitlit_db_interface';
+
 export type Link = [string, number | null];
 
 export interface DataNode {
@@ -8,7 +13,7 @@ export interface DataNode {
   confirmation_flag: boolean;
 }
 
-export class DwitlitDB {
+export class SimpleDwitlitDB implements IDwitlitDB {
   private nodes: Map<number, DataNode> = new Map();
   private nextInternalId: number = 0;
   private modificationCount: number = 0;
@@ -31,7 +36,7 @@ export class DwitlitDB {
     return this.DWITLIT_ID_REGEX.test(dwitlit_id);
   }
 
-  set_data_node(dwitlit_id: string, link_list: Link[], data: Uint8Array, confirmation_flag: boolean | null): number | null {
+  setDataNode(dwitlit_id: string, link_list: Link[], data: Uint8Array, confirmation_flag: boolean | null): number | null {
     if (!this.validateDwitlitId(dwitlit_id)) {
       throw new Error(`Invalid dwitlit_id: ${dwitlit_id}`);
     }
@@ -113,13 +118,13 @@ export class DwitlitDB {
     return internal_id;
   }
 
-  get_data_node(internal_id: number): [string, Link[], Uint8Array, boolean] | null {
+  getDataNode(internal_id: number): [string, Link[], Uint8Array, boolean] | null {
     const node = this.nodes.get(internal_id);
     if (!node) return null;
     return [node.dwitlit_id, node.link_list, node.data, node.confirmation_flag];
   }
 
-  remove_data_node(internal_id: number): boolean | null {
+  removeDataNode(internal_id: number): boolean | null {
     const node = this.nodes.get(internal_id);
     if (!node) return null;
 
@@ -155,7 +160,7 @@ export class DwitlitDB {
     return true;
   }
 
-  update_confirmation_flag(internal_id: number, confirmation_flag: boolean): boolean {
+  updateConfirmationFlag(internal_id: number, confirmation_flag: boolean): boolean {
     const node = this.nodes.get(internal_id);
     if (!node) return false;
     if (node.confirmation_flag !== confirmation_flag) {
@@ -165,7 +170,7 @@ export class DwitlitDB {
     return true;
   }
 
-  *iterate_data_nodes(): Generator<number | null> {
+  *iterateDataNodes(): Generator<number | null> {
     const startCount = this.modificationCount;
     const ids = Array.from(this.nodes.keys());
     for (const id of ids) {
@@ -177,7 +182,7 @@ export class DwitlitDB {
     }
   }
 
-  *iterate_links(internal_id: number): Generator<Link | null> | null {
+  *iterateLinks(internal_id: number): Generator<Link | null> | null {
     const node = this.nodes.get(internal_id);
     if (!node) return null;
 
@@ -191,7 +196,7 @@ export class DwitlitDB {
     }
   }
 
-  *iterate_data_nodes_by_dwitlit_id(dwitlit_id: string): Generator<number | null> {
+  *iterateDataNodesByDwitlitId(dwitlit_id: string): Generator<number | null> {
     const startCount = this.modificationCount;
     const ids = Array.from(this.nodesByDwitlitId.get(dwitlit_id) || []);
     for (const id of ids) {
@@ -203,7 +208,7 @@ export class DwitlitDB {
     }
   }
 
-  *iterate_general_backlinks(dwitlit_id: string): Generator<[number, number] | null> {
+  *iterateGeneralBacklinks(dwitlit_id: string): Generator<[number, number] | null> {
     const startCount = this.modificationCount;
     const backs = Array.from(this.generalBacklinks.get(dwitlit_id) || []);
     for (const back of backs) {
@@ -216,7 +221,7 @@ export class DwitlitDB {
     }
   }
 
-  *iterate_specific_backlinks(internal_id: number): Generator<[number, number] | null> | null {
+  *iterateSpecificBacklinks(internal_id: number): Generator<[number, number] | null> | null {
     if (!this.nodes.has(internal_id)) return null;
 
     const startCount = this.modificationCount;
@@ -229,5 +234,8 @@ export class DwitlitDB {
       const [sourceId, index] = back.split(':').map(Number);
       yield [sourceId, index];
     }
+  }
+  close(): void {
+
   }
 }

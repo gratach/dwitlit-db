@@ -70,6 +70,7 @@ The database provides the following functions:
     If the confirmation flag is null, it does not change the confirmation flag of the existing data node but sets it to false if the node did not exist before.
     The function returns null if the link list contains specific links that point to data nodes that do not exist in the database.
     In this case, the data node is not added to the database.
+    If the main dwitlit id or the dwitlit ids in the link list contain invalid characters an error is thrown and the data node is not added to the database.
 - **get_data_node(internal_id)**:
     This function retrieves the data node with the given internal id from the database.
     It returns a tuple containing the dwitlit id, link list, data, and confirmation flag of the data node.

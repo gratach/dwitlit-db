@@ -32,4 +32,6 @@ export class Database {
   }
 }
 
-export * from './dwitlit-db';
+export type { IDwitlitDB } from './dwitlit_db_interface';
+export { SimpleDwitlitDB } from './simple_dwitlit_db';
+export { SqliteDwitlitDB } from './sqlite_dwitlit_db';
