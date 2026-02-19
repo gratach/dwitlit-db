@@ -1,15 +1,17 @@
 import { SimpleDwitlitDB } from '@dwitlit-db/data';
 import { SqliteDwitlitDB } from '@dwitlit-db/data';
 import type { IDwitlitDB } from '@dwitlit-db/data';
+import {SqlJsDatabase} from '@dwitlit-db/data';
+import Database from "better-sqlite3";
 
 type Link = [string, number | null];
 
-function testDwitlitDB(createDB: () => IDwitlitDB, name: string) {
+function testDwitlitDB(createDB: () => Promise<IDwitlitDB> | IDwitlitDB, name: string) {
   describe('DwitlitDB ' + name, () => {
     let db: IDwitlitDB;
 
-    beforeEach(() => {
-      db = createDB();
+    beforeEach(async () => {
+      db = await Promise.resolve(createDB());
     });
 
     afterEach(() => {
@@ -156,5 +158,12 @@ function testDwitlitDB(createDB: () => IDwitlitDB, name: string) {
   });
 }
 
-testDwitlitDB(() => new SimpleDwitlitDB(), 'SimpleDwitlitDB');
-testDwitlitDB(() => new SqliteDwitlitDB(':memory:'), 'SqliteDwitlitDB');
+
+testDwitlitDB(async () => new SimpleDwitlitDB(), 'SimpleDwitlitDB');
+testDwitlitDB(async () => new SqliteDwitlitDB(Database(':memory:')), 'SqliteDwitlitDB');
+testDwitlitDB(async () => {
+  const sqlJsDb = await SqlJsDatabase.create();
+  return new SqliteDwitlitDB(sqlJsDb);
+}, 'SqlJsDwitlitDB');
+
+

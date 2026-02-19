@@ -35,3 +35,4 @@ export class Database {
 export type { IDwitlitDB } from './dwitlit_db_interface';
 export { SimpleDwitlitDB } from './simple_dwitlit_db';
 export { SqliteDwitlitDB } from './sqlite_dwitlit_db';
+export { SqlJsDatabase } from './sql_js_wrapper';

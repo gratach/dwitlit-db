@@ -4,11 +4,15 @@
 // Uses better-sqlite3 for storage
 // All comments are in English as requested
 
-import Database from "better-sqlite3";
+import type { ISqliteDatabase } from './sqlite_database_interface';
+import type { IDwitlitDB } from './dwitlit_db_interface';
 
 export type DwitlitID = string;
 export type Link = [string, number | null];
 export type DataNode = [string, Link[], Uint8Array, boolean];
+
+
+
 
 class SafeIterator<T> implements IterableIterator<T | null> {
     private index = 0;
@@ -46,12 +50,13 @@ class SafeIterator<T> implements IterableIterator<T | null> {
 // Main Database Class
 // --------------------
 
-export class SqliteDwitlitDB {
-    private db: Database.Database;
+export class SqliteDwitlitDB implements IDwitlitDB {
+    private db: ISqliteDatabase
     private version = 0; // Increases on every modification
 
-    constructor(path: string | ":memory:" = ":memory:") {
-        this.db = new Database(':memory:');
+    constructor(db: ISqliteDatabase) {
+        //this.db = new Database(path);
+        this.db = db;
         this.db.pragma("foreign_keys = ON");
         this.initialize();
     }
@@ -305,11 +310,13 @@ export class SqliteDwitlitDB {
             return internalId;
         });
 
-        try {
+        /*try {
             return tx();
         } catch {
             return null;
-        }
+        }*/
+
+        return tx();
     }
 
     // get_data_node
