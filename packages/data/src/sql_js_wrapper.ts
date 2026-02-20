@@ -1,15 +1,59 @@
-import { TextDecoder, TextEncoder } from "util";
 import type { SqlJsStatic, Database } from "sql.js";
 
-if (typeof global !== "undefined") {
-    if (!(global as any).TextDecoder) {
-        (global as any).TextDecoder = TextDecoder as any;
-    }
+// sql_js_wrapper.ts
 
-    if (!(global as any).TextEncoder) {
-        (global as any).TextEncoder = TextEncoder as any;
-    }
+type UniversalTextDecoder = {
+  decode(
+    input?: ArrayBuffer | ArrayBufferView | SharedArrayBuffer | null,
+    options?: { stream?: boolean }
+  ): string;
+};
+
+type UniversalTextEncoder = {
+  encode(input?: string): Uint8Array;
+};
+
+let TextDecoderImpl: {
+  new (...args: any[]): UniversalTextDecoder;
+};
+
+let TextEncoderImpl: {
+  new (...args: any[]): UniversalTextEncoder;
+};
+
+async function loadEncoding() {
+  if (
+    typeof globalThis.TextDecoder !== "undefined" &&
+    typeof globalThis.TextEncoder !== "undefined"
+  ) {
+    TextDecoderImpl = globalThis.TextDecoder as any;
+    TextEncoderImpl = globalThis.TextEncoder as any;
+    return;
+  }
+
+  const util = await import("util");
+
+  TextDecoderImpl = util.TextDecoder as any;
+  TextEncoderImpl = util.TextEncoder as any;
 }
+
+export async function ensureEncoding() {
+  await loadEncoding();
+
+  if (!(globalThis as any).TextDecoder) {
+    (globalThis as any).TextDecoder = TextDecoderImpl;
+  }
+
+  if (!(globalThis as any).TextEncoder) {
+    (globalThis as any).TextEncoder = TextEncoderImpl;
+  }
+}
+
+// Execute this at the start of your application to ensure TextDecoder/TextEncoder are available
+ensureEncoding().catch((err) => {
+  console.error("Failed to load TextDecoder/TextEncoder:", err);
+  throw err;
+});
 
 // --------------------
 // Environment Detection

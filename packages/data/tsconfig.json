@@ -11,5 +11,5 @@
     "moduleResolution": "Bundler",
     "strict": true
   },
-  "include": ["src"]
+  "include": ["src", "src/types"],
 }
