@@ -67,21 +67,24 @@ const isNode =
 // Load sql.js build
 // --------------------
 
-let initSqlJs: (config?: any) => Promise<SqlJsStatic>;
-
-if (isNode) {
-    // Node build (uses fs)
-    initSqlJs = require("sql.js/dist/sql-wasm.js");
-} else {
-    // Browser build (uses fetch)
-    initSqlJs = require("sql.js/dist/sql-wasm-browser.js");
-}
-
 import {
     ISqliteDatabase,
     ISqliteStatement,
     ISqliteRunResult
 } from "./sqlite_database_interface";
+
+async function loadSqlJs(): Promise<(config?: any) => Promise<SqlJsStatic>> {
+    if (isNode) {
+        // Node build (uses fs)
+        // Use a dynamic import that Vite will ignore to avoid bundling Node-specific code
+        const modulePath = "sql.js/dist/sql-wasm.js";
+        return (await import(/* @vite-ignore */ modulePath)).default;
+    } else {
+        // Browser build (uses fetch)
+        // @ts-ignore
+        return (await import("sql.js/dist/sql-wasm-browser.js")).default;
+    }
+}
 
 // Wrapper around sql.js Database
 export class SqlJsDatabase implements ISqliteDatabase {
@@ -95,6 +98,7 @@ export class SqlJsDatabase implements ISqliteDatabase {
     static async create(
         initialData?: Uint8Array
     ): Promise<SqlJsDatabase> {
+        const initSqlJs = await loadSqlJs();
 
         const SQL: SqlJsStatic = await initSqlJs({
             locateFile: (file: string) => {
@@ -102,7 +106,7 @@ export class SqlJsDatabase implements ISqliteDatabase {
                 // --------------------
                 // Node.js: absolute path
                 // --------------------
-                if (isNode) {
+                if (isNode && typeof require !== "undefined") {
                     return require.resolve(`sql.js/dist/${file}`);
                 }
 
