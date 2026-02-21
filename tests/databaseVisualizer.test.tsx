@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { DatabaseVisualizer } from '@dwitlit-db/ui';
+import { DBVisualizer } from '@dwitlit-db/ui';
 import { Database } from '@dwitlit-db/data';
 
 describe('DatabaseVisualizer', () => {
@@ -10,12 +10,12 @@ describe('DatabaseVisualizer', () => {
   });
 
   test('renders "No data" initially', () => {
-    render(<DatabaseVisualizer database={db} />);
+    render(<DBVisualizer database={db} />);
     expect(screen.getByText('No data')).toBeInTheDocument();
   });
 
   test('adds data to the database and displays it', () => {
-    render(<DatabaseVisualizer database={db} />);
+    render(<DBVisualizer database={db} />);
 
     const idInput = screen.getByPlaceholderText('ID');
     const valueInput = screen.getByPlaceholderText('Value');
@@ -32,7 +32,7 @@ describe('DatabaseVisualizer', () => {
 
   test('updates data in the database', () => {
     db.setData('test-id', 'old-value');
-    render(<DatabaseVisualizer database={db} />);
+    render(<DBVisualizer database={db} />);
 
     expect(screen.getByText('"old-value"')).toBeInTheDocument();
 
@@ -50,7 +50,7 @@ describe('DatabaseVisualizer', () => {
 
   test('deletes data from the database', () => {
     db.setData('test-id', 'test-value');
-    render(<DatabaseVisualizer database={db} />);
+    render(<DBVisualizer database={db} />);
 
     const deleteButton = screen.getByText('Delete');
     fireEvent.click(deleteButton);
