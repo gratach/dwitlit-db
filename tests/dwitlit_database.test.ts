@@ -155,6 +155,29 @@ function testDwitlitDB(createDB: () => Promise<IDwitlitDB> | IDwitlitDB, name: s
       expect(nextVal).toBeNull();
       expect(iterator.next().done).toBe(true);
     });
+
+    test('database change listeners', () => {
+      const listener = jest.fn();
+
+      db.addDatabaseChangeListener(listener);
+      expect(listener).toHaveBeenCalledTimes(0);
+
+      const id1 = db.setDataNode('node', [], new Uint8Array(), true);
+      expect(listener).toHaveBeenCalledTimes(1);
+
+      db.updateConfirmationFlag(id1!, false);
+      expect(listener).toHaveBeenCalledTimes(2);
+
+      db.updateConfirmationFlag(id1!, false); // no change, should not trigger
+      expect(listener).toHaveBeenCalledTimes(2);
+
+      db.removeDataNode(id1!);
+      expect(listener).toHaveBeenCalledTimes(3);
+
+      db.removeDatabaseChangeListener(listener);
+      db.setDataNode('node2', [], new Uint8Array(), true);
+      expect(listener).toHaveBeenCalledTimes(3); // should not be called again
+    });
   });
 }
 

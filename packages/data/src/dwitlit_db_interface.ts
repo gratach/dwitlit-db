@@ -31,5 +31,9 @@ export interface IDwitlitDB {
         internalId: number
     ): IterableIterator<[number, number] | null> | null;
 
+    addDatabaseChangeListener(listener: () => void): void;
+
+    removeDatabaseChangeListener(listener: () => void): boolean;
+
     close(): void;
 }

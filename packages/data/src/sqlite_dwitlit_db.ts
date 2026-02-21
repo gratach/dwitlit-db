@@ -53,6 +53,7 @@ class SafeIterator<T> implements IterableIterator<T | null> {
 export class SqliteDwitlitDB implements IDwitlitDB {
     private db: ISqliteDatabase
     private version = 0; // Increases on every modification
+    private databaseChangeListeners: Set<() => void> = new Set();
 
     constructor(db: ISqliteDatabase) {
         //this.db = new Database(path);
@@ -106,6 +107,7 @@ export class SqliteDwitlitDB implements IDwitlitDB {
 
     private bumpVersion(): void {
         this.version++;
+        this.databaseChangeListeners.forEach(listener => listener());
     }
 
     getVersion(): number {
@@ -387,6 +389,15 @@ export class SqliteDwitlitDB implements IDwitlitDB {
         internalId: number,
         flag: boolean
     ): boolean {
+        // Get the current flag value
+        const row = this.db
+            .prepare("SELECT confirmation_flag FROM data_nodes WHERE internal_id = ?")
+            .get(internalId);
+
+        if (row && row.confirmation_flag === (flag ? 1 : 0)) {
+            return false; // No change needed
+        }
+
         const result = this.db
             .prepare(`
                 UPDATE data_nodes
@@ -483,6 +494,14 @@ export class SqliteDwitlitDB implements IDwitlitDB {
             .map((r: any) => [r.source_internal_id, r.link_index] as [number, number]);
 
         return new SafeIterator(this, rows);
+    }
+
+    addDatabaseChangeListener(listener: () => void): void {
+        this.databaseChangeListeners.add(listener);
+    }
+
+    removeDatabaseChangeListener(listener: () => void): boolean {
+        return this.databaseChangeListeners.delete(listener);
     }
 
     // --------------------

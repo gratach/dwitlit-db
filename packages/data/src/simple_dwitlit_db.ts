@@ -26,6 +26,8 @@ export class SimpleDwitlitDB implements IDwitlitDB {
 
   private DWITLIT_ID_REGEX = /^[A-Za-z0-9\-\_\/\.]*$/;
 
+  private databaseChangeListeners: Set<() => void> = new Set();
+
   private getUniqueKey(dwitlit_id: string, link_list: Link[], data: Uint8Array): string {
     const linksStr = JSON.stringify(link_list);
     const dataStr = Array.from(data).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -61,7 +63,7 @@ export class SimpleDwitlitDB implements IDwitlitDB {
         const node = this.nodes.get(existingId)!;
         if (node.confirmation_flag !== confirmation_flag) {
           node.confirmation_flag = confirmation_flag;
-          this.modificationCount++;
+          this.reportDatabaseChange
         }
       }
       return existingId;
@@ -114,7 +116,7 @@ export class SimpleDwitlitDB implements IDwitlitDB {
       }
     });
 
-    this.modificationCount++;
+    this.reportDatabaseChange();
     return internal_id;
   }
 
@@ -156,7 +158,7 @@ export class SimpleDwitlitDB implements IDwitlitDB {
       }
     });
 
-    this.modificationCount++;
+    this.reportDatabaseChange();
     return true;
   }
 
@@ -165,7 +167,7 @@ export class SimpleDwitlitDB implements IDwitlitDB {
     if (!node) return false;
     if (node.confirmation_flag !== confirmation_flag) {
       node.confirmation_flag = confirmation_flag;
-      this.modificationCount++;
+      this.reportDatabaseChange();
     }
     return true;
   }
@@ -235,6 +237,21 @@ export class SimpleDwitlitDB implements IDwitlitDB {
       yield [sourceId, index];
     }
   }
+
+  addDatabaseChangeListener(listener: () => void): void {
+    this.databaseChangeListeners.add(listener);
+  }
+
+  removeDatabaseChangeListener(listener: () => void): boolean {
+    return this.databaseChangeListeners.delete(listener);
+  }
+
+  private reportDatabaseChange(): void {
+    // This method can be used to notify listeners about database changes if we implement listener functionality in the future.
+    this.modificationCount++;
+    this.databaseChangeListeners.forEach(listener => listener());
+  }
+
   close(): void {
 
   }

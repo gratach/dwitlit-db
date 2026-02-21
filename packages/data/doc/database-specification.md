@@ -106,6 +106,13 @@ The database provides the following functions:
     The function returns an empty iterator if there are no data nodes with a specific link to the data node with the given internal id in the database.
     The function returns null if the data node with the given internal id does not exist in the database.
     If the database gets modified while the iterator is being used, the iterator returns a final null element and stops iterating.
+- **add_database_change_listener(listener)**:
+    This function adds a listener function that will be called whenever the database is modified.
+    The listener function takes no arguments and returns nothing.
+    It is called after the database has been modified, but before any iterators that are currently being used return their final null element.
+- **remove_database_change_listener(listener)**:
+    This function removes a previously added database change listener.
+    It returns true if the listener was successfully removed and false if the listener was not found among the currently added listeners.
 
 ## Implementation Notes
 
