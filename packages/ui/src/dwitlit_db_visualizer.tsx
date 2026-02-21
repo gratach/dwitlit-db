@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { IDwitlitDB } from "@dwitlit-db/data";
+import { LinkEditor } from "./dwitlit_link_editor";
 
 /**
  * Type for visualized data node
@@ -25,49 +26,50 @@ interface Props {
  * Visualizer component for DwitlitDB
  */
 export function DwitlitDBVisualizer({ database }: Props) {
-  const [nodes, setNodes] = useState<VisualizedNode[]>([]);
+    const [nodes, setNodes] = useState<VisualizedNode[]>([]);
 
-  // Form state for adding new nodes
-  const [newId, setNewId] = useState("");
-  const [newData, setNewData] = useState("");
-  const [newLinks, setNewLinks] = useState("");
-  const [newConfirmed, setNewConfirmed] = useState(false);
+    // Form state for adding new nodes
+    const [newId, setNewId] = useState("");
+    const [newData, setNewData] = useState("");
+    const [links, setLinks] = useState<Array<[string, number | null]>>([]);
+    const [showLinkEditor, setShowLinkEditor] = useState(false);
+    const [newConfirmed, setNewConfirmed] = useState(false);
 
-  /**
-   * Load all nodes from database
-   */
-  const loadNodes = () => {
-    const result: VisualizedNode[] = [];
+    /**
+     * Load all nodes from database
+     */
+    const loadNodes = () => {
+        const result: VisualizedNode[] = [];
 
-    const iterator = database.iterateDataNodes();
+        const iterator = database.iterateDataNodes();
 
-    for (const internalId of iterator) {
-      if (internalId === null) break;
+        for (const internalId of iterator) {
+            if (internalId === null) break;
 
-      const node = database.getDataNode(internalId);
-      if (!node) continue;
+            const node = database.getDataNode(internalId);
+            if (!node) continue;
 
-      const [dwitlitId, links, data, confirmed] = node;
+            const [dwitlitId, links, data, confirmed] = node;
 
-      // Convert bytes to readable string if possible
-      let dataString: string;
+            // Convert bytes to readable string if possible
+            let dataString: string;
 
-      try {
-        dataString = new TextDecoder().decode(data);
-      } catch {
-        dataString = btoa(
-          String.fromCharCode(...Array.from(data as Uint8Array))
-        );
-      }
+            try {
+            dataString = new TextDecoder().decode(data);
+            } catch {
+            dataString = btoa(
+                String.fromCharCode(...Array.from(data as Uint8Array))
+            );
+            }
 
-      result.push({
-        internalId,
-        dwitlitId,
-        links,
-        data: dataString,
-        confirmed,
-      });
-    }
+            result.push({
+            internalId,
+            dwitlitId,
+            links,
+            data: dataString,
+            confirmed,
+            });
+        }
 
     setNodes(result);
   };
@@ -90,36 +92,19 @@ export function DwitlitDBVisualizer({ database }: Props) {
   }, [database]);
 
   /**
-   * Parse links from input
-   * Format: id1:null,id2:5,id3:null
-   */
-  const parseLinks = (): Array<[string, number | null]> => {
-    if (!newLinks.trim()) return [];
-
-    return newLinks.split(",").map((entry) => {
-      const [id, target] = entry.split(":");
-
-      return [
-        id.trim(),
-        target === "null" || !target ? null : Number(target),
-      ];
-    });
-  };
-
-  /**
    * Add new data node
    */
   const handleAdd = () => {
     if (!newId.trim()) return;
 
-    const links = parseLinks();
+    const linkList = links;
 
     const encoder = new TextEncoder();
     const dataBytes = encoder.encode(newData);
 
     database.setDataNode(
       newId,
-      links,
+      linkList,
       dataBytes,
       newConfirmed
     );
@@ -127,7 +112,7 @@ export function DwitlitDBVisualizer({ database }: Props) {
     // Reset form
     setNewId("");
     setNewData("");
-    setNewLinks("");
+    setLinks([]);
     setNewConfirmed(false);
   };
 
@@ -165,12 +150,12 @@ export function DwitlitDBVisualizer({ database }: Props) {
           onChange={(e) => setNewData(e.target.value)}
         />
 
-        <input
-          type="text"
-          placeholder="Links (id:null,id2:5)"
-          value={newLinks}
-          onChange={(e) => setNewLinks(e.target.value)}
-        />
+        <button
+            type="button"
+            onClick={() => setShowLinkEditor(true)}
+            >
+            Edit Links ({links.length})
+        </button>
 
         <label style={{ marginLeft: "0.5rem" }}>
           <input
@@ -185,6 +170,14 @@ export function DwitlitDBVisualizer({ database }: Props) {
           Add Node
         </button>
       </div>
+
+      {showLinkEditor && (
+        <LinkEditor
+            links={links}
+            onChange={setLinks}
+            onClose={() => setShowLinkEditor(false)}
+        />
+      )}
 
       {/* Nodes Table */}
       <table
