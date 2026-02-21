@@ -63,7 +63,7 @@ The database contains the following tables:
 ## Functions
 
 The database provides the following functions:
-- **set_data_node(dwitlit_id, link_list, data, confirmation_flag)**:
+- **setDataNode(dwitlit_id, link_list, data, confirmation_flag)**:
     This function adds a new data node to the database with the given dwitlit id, link list, data, and confirmation flag.
     It returns the internal id of the newly created data node.
     If the combination of dwitlit id, link list and data already exists in the database, it returns the internal id of the existing data node and sets the confirmation flag of the existing data node to the given confirmation flag if it is not null.
@@ -71,46 +71,46 @@ The database provides the following functions:
     The function returns null if the link list contains specific links that point to data nodes that do not exist in the database.
     In this case, the data node is not added to the database.
     If the main dwitlit id or the dwitlit ids in the link list contain invalid characters an error is thrown and the data node is not added to the database.
-- **get_data_node(internal_id)**:
+- **getDataNode(internal_id)**:
     This function retrieves the data node with the given internal id from the database.
     It returns a tuple containing the dwitlit id, link list, data, and confirmation flag of the data node.
     The function returns null if the data node with the given internal id does not exist in the database.
-- **remove_data_node(internal_id)**:
+- **removeDataNode(internal_id)**:
     This function removes the data node with the given internal id from the database if there are no specific links pointing to it.
     It returns true if the data node was successfully removed, false if the data node could not be removed because there are specific links pointing to it, and null if the data node with the given internal id does not exist in the database.
-- **update_confirmation_flag(internal_id, confirmation_flag)**:
+- **updateConfirmationFlag(internal_id, confirmation_flag)**:
     This function updates the confirmation flag of the data node with the given internal id to the given confirmation flag.
     It returns true if the confirmation flag was successfully updated and false if the data node with the given internal id does not exist in the database.
-- **iterate_data_nodes()**:
+- **iterateDataNodes()**:
     This function returns an iterator over all the data nodes in the database.
     Each element of the iterator is the internal id of a data node.
     If the database gets modified while the iterator is being used, the iterator returns a final null element and stops iterating.
-- **iterate_links(internal_id)**:
+- **iterateLinks(internal_id)**:
     This function returns an iterator over all the links of the data node with the given internal id.
     Each element of the iterator is a tuple containing the dwitlit id and the target internal id (or null for general links).
     The function returns null if the data node with the given internal id does not exist in the database.
     If the database gets modified while the iterator is being used, the iterator returns a final null element and stops iterating.
-- **iterate_data_nodes_by_dwitlit_id(dwitlit_id)**:
+- **iterateDataNodesByDwitlitId(dwitlit_id)**:
     This function returns an iterator over all the data nodes in the database that have the given dwitlit id.
     Each element of the iterator is the internal id of a data node.
     The function returns an empty iterator if there are no data nodes with the given dwitlit id in the database.
     If the database gets modified while the iterator is being used, the iterator returns a final null element and stops iterating.
-- **iterate_general_backlinks(dwitlit_id)**:
+- **iterateGeneralBacklinks(dwitlit_id)**:
     This function returns an iterator over all general links in the database that point to the given dwitlit id.
     Each element of the iterator is a tuple containing the internal id of the source data node and the index of the link in the link list of the source data node.
     The function returns an empty iterator if there are no data nodes with a general link to the given dwitlit id in the database.
     If the database gets modified while the iterator is being used, the iterator returns a final null element and stops iterating.
-- **iterate_specific_backlinks(internal_id)**:
+- **iterateSpecificBacklinks(internal_id)**:
     This function returns an iterator over all specific links in the database that point to the data node with the given internal id.
     Each element of the iterator is a tuple containing the internal id of the source data node and the index of the link in the link list of the source data node.
     The function returns an empty iterator if there are no data nodes with a specific link to the data node with the given internal id in the database.
     The function returns null if the data node with the given internal id does not exist in the database.
     If the database gets modified while the iterator is being used, the iterator returns a final null element and stops iterating.
-- **add_database_change_listener(listener)**:
+- **addDatabaseChangeListener(listener)**:
     This function adds a listener function that will be called whenever the database is modified.
     The listener function takes no arguments and returns nothing.
     It is called after the database has been modified, but before any iterators that are currently being used return their final null element.
-- **remove_database_change_listener(listener)**:
+- **removeDatabaseChangeListener(listener)**:
     This function removes a previously added database change listener.
     It returns true if the listener was successfully removed and false if the listener was not found among the currently added listeners.
 
